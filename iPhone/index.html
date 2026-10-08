@@ -435,6 +435,37 @@ footer.end { padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
 .ftab:hover .fic svg, .ftab[aria-selected="true"] .fic svg { transform: translateY(-2px) rotate(-4deg) scale(1.06); }
 @media (max-width: 560px) { .ftab .fic { width: 52px; height: 52px; margin-bottom: 4px; } }
 @media (prefers-reduced-motion: reduce) { .ftab .fic svg { transition: none; } .ftab:hover .fic svg, .ftab[aria-selected="true"] .fic svg { transform: none; } }
+
+/* 熱賣儀表板 */
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; }
+.kpi { text-align: left; border: 1px solid var(--line); border-top: 4px solid var(--accent); border-radius: 14px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px; background: var(--card); }
+.kpi:hover { border-color: var(--muted); }
+.kpi.k-burg { border-top-color: #B24A5A; } .kpi.k-c256 { border-top-color: #34C759; } .kpi.k-pro { border-top-color: #0071E3; } .kpi.k-grow { border-top-color: #30B0C7; }
+.kpi .kh { font-size: 12px; color: var(--muted); font-weight: 500; }
+.kpi .kv { font-size: 19px; line-height: 1.25; font-weight: 700; letter-spacing: -0.01em; }
+.kpi .ks { font-size: 12.5px; line-height: 1.45; color: var(--muted); }
+.stabs { display: flex; flex-wrap: wrap; gap: 6px; padding: 3px; border-radius: 22px; background: var(--pill); align-self: flex-start; }
+.stabs .dseg-b { padding: 0 16px; }
+.scard { border: 1px solid var(--line); border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 12px; background: var(--card); }
+.scard h3 { margin: 0; font-size: 18px; line-height: 1.3; }
+.smeta { display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: center; font-size: 13px; color: var(--muted); margin-top: 6px; }
+.brow { display: grid; grid-template-columns: minmax(0, 170px) 1fr auto; gap: 6px 10px; align-items: center; }
+.bl { font-size: 14.5px; line-height: 1.4; overflow-wrap: anywhere; }
+.btrack { height: 16px; border-radius: 999px; background: var(--pill); overflow: hidden; }
+.btrack i { display: block; height: 100%; border-radius: 999px; background: var(--accent); min-width: 6px; }
+.btrack i.d { background-image: repeating-linear-gradient(45deg, rgba(255, 255, 255, .4) 0 4px, transparent 4px 8px); }
+.bv { font-size: 14px; font-weight: 700; white-space: nowrap; text-align: right; }
+.brow.na { grid-template-columns: minmax(0, 170px) 1fr; }
+.bna { font-size: 14px; color: var(--muted); }
+.c-pro { background-color: #0071E3 !important; } .c-max { background-color: #5E5CE6 !important; } .c-duo { background-color: #BF5AF2 !important; }
+.c-burg { background-color: #B24A5A !important; } .c-glac { background-color: #6FB6F0 !important; } .c-other { background-color: #A1A1A6 !important; }
+.c-c256 { background-color: #34C759 !important; } .c-c512 { background-color: #FF9F0A !important; } .c-grow { background-color: #30B0C7 !important; }
+.slist { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: 6px; font-size: 14.5px; line-height: 1.5; }
+.snote { font-size: 13px; line-height: 1.5; color: var(--muted); margin: 0; }
+.ssrc { font-size: 13px; margin: 0; overflow-wrap: anywhere; }
+.slegend { font-size: 13px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: center; }
+.slegend .sw { display: inline-block; width: 28px; height: 10px; border-radius: 999px; background: var(--accent); vertical-align: middle; margin-right: 6px; background-image: repeating-linear-gradient(45deg, rgba(255, 255, 255, .5) 0 4px, transparent 4px 8px); }
+@media (max-width: 560px) { .brow { grid-template-columns: 1fr auto; } .brow .bl { grid-column: 1 / -1; } .brow.na { grid-template-columns: 1fr; } .stabs .dseg-b { padding: 0 12px; } }
 </style>
 </head>
 <body>
@@ -443,6 +474,7 @@ footer.end { padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
     <a class="name" href="#top" data-i="nav_name">iPhone 功能展示</a>
     <nav aria-label="頁面導覽" data-ia="aria-label:nav_aria">
       <a href="#explore" data-i="nav_explore">特色探索</a>
+      <a href="#sales" data-sales="nav" data-i="nav_sales">熱賣儀表板</a>
       <a href="#deal" data-deal="nav" data-i="nav_deal">最優惠</a>
       <a href="#buy" data-buy="nav" data-i="nav_buy">哪裡買？</a>
       <a href="#compare" data-i="nav_compare">規格對照</a>
@@ -461,8 +493,9 @@ footer.end { padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
       <p class="sub" id="heroSub"></p>
       <div class="heroacts">
         <a class="btn" href="#explore" data-i="hero_btn">開始探索</a>
-        <button type="button" class="btn btn2" data-buy="hero" data-i="hero_buy">哪裡買？</button>
+        <button type="button" class="btn btn2" data-sales="hero" data-i="hero_sales">熱賣儀表板</button>
         <button type="button" class="btn btn2" data-deal="hero" data-i="hero_deal">最優惠</button>
+        <button type="button" class="btn btn2" data-buy="hero" data-i="hero_buy">哪裡買？</button>
       </div>
       <figure id="heroFig"></figure>
     </div>
@@ -565,8 +598,21 @@ footer.end { padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
   <div class="deal-body" id="dealBody"></div>
 </section>
 
+<div class="buy-back" id="salesBack" hidden></div>
+<section class="buy deal" id="salesPanel" role="dialog" aria-modal="true" aria-labelledby="salesTitle" hidden>
+  <div class="buy-head">
+    <div>
+      <h2 id="salesTitle" data-i="sales_title">熱賣儀表板</h2>
+      <p data-i="sales_sub"></p>
+    </div>
+    <button type="button" class="buy-x" id="salesClose" data-ia="aria-label:sales_close" aria-label="關閉">&times;</button>
+  </div>
+  <div class="deal-body" id="salesBody"></div>
+</section>
+
 <script src="data/resellers.js"></script>
 <script src="data/deals.js"></script>
+<script src="data/sales.js"></script>
 <script>
 (function () {
   "use strict";
@@ -631,6 +677,16 @@ footer.end { padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
       buy_carrier: "清單不含電信業者門市（Apple 官方頁面也不顯示這些門市）。",
       buy_data: function (n, d) { return "資料日期 " + d + "，共 " + n + " 個據點。官方頁只提供距離，位置是用距離推算的，可能差幾十公尺；距離是直線距離，不是步行或開車的路程。"; },
       buy_official: "到 Apple 官方頁面確認", buy_official_hint: "（按下後，這個位置的座標（約 100 公尺精度）會帶到 Apple 官網。）",
+      nav_sales: "熱賣儀表板", hero_sales: "熱賣儀表板",
+      sales_title: "熱賣儀表板", sales_sub: "業者公布的初期銷售、預約與問卷數據：看哪些機型、顏色、容量賣得好。",
+      sales_close: "關閉", sales_nodata: "找不到熱賣資料檔（data/sales.js）。請確認它和 index.html 一起上傳。",
+      sales_tab_model: "機型", sales_tab_color: "顏色", sales_tab_cap: "容量", sales_tab_growth: "成長", sales_tab_duo: "iPhone Duo", sales_tab_aria: "選擇要看的項目",
+      sales_warn: function (d) { return "這不是 Apple 的官方銷量，也沒有實際台數。數字是電信、電商與經銷商在 9 月中旬前後公布的初期數據（資料讀取日 " + d + "），各家口徑不同，所以每個來源各自成一張圖，不合併、不平均。"; },
+      sales_sum_h: "怎麼解讀",
+      sales_k_presale: "預購", sales_k_reserve: "預約", sales_k_survey: "問卷", sales_k_launch: "首賣日",
+      sales_lg: "預購、預約：消費者下單或登記。問卷：想買什麼，不是成交。首賣日：開賣當天的業者說法。",
+      sales_lg_d: "斜紋長條：由原文推算（例如 100% 減去已知部分）", sales_lg_a: "「近」「約」「逾」：保留報導原文用字",
+      sales_src: "來源", sales_foot: "新數據出來時，這裡的內容需要重新整理；業者之後公布的數字可能和這裡不同。",
       nav_deal: "最優惠", hero_deal: "最優惠", deal_btn: "看最優惠經銷商",
       deal_title: "最優惠", deal_sub: "比較主要經銷商目前的 iPhone 18 Pro 系列與 iPhone Duo 促銷，並給購買建議。",
       deal_close: "關閉", deal_seg_aria: "選擇機型", deal_nodata: "找不到優惠資料檔（data/deals.js）。請確認它和 index.html 一起上傳。",
@@ -670,7 +726,8 @@ footer.end { padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
         "情境對話練習是劇本式：客人台詞、選項與回饋都是預先寫好的，沒有 AI 即時生成。分數只代表「回答是否有官方依據、有沒有說過頭」，不是銷售能力的評量。最高分只存在你自己的瀏覽器。",
         "語音練習：按下錄音後，你的瀏覽器會把語音送到它自己的雲端轉成文字（Chrome 與 Edge 由 Google 或 Microsoft 處理，Safari 由 Apple 處理）。本站不儲存錄音、不上傳任何內容，評分在你的瀏覽器裡完成。評分是關鍵字與規則比對，看不懂語意，也可能因為語音辨識錯誤而誤判，請先檢查並修正逐字稿；它不是對你說得好不好的評價。",
         "「哪裡買？」的據點資料整理自 Apple 官方<a href=\"https://locate.apple.com/tw/zh/sales?pt=3\" target=\"_blank\" rel=\"noopener\">「搜尋地點」</a>頁面（iPhone 販售據點，臺北市與新北市，2026/10/08 讀取），不含電信業者門市。官方頁只提供距離，座標是由多個查詢點的距離推算出來的，不是官方座標；列出據點不代表有庫存。地圖使用 Leaflet 與 OpenStreetMap 圖磚（© OpenStreetMap contributors）。",
-        "「最優惠」整理自各經銷商官網（STUDIO A、德誼數位、iStore、燦坤）與新聞報導，讀取日 2026/10/08；優仕找不到官方來源，所以標示「不知道」。促銷內容、名額與期限常變動，一切以店家公告為準。購買建議是依已查到的資料整理，不是保證，也不是投資或財務建議。德誼官網的刷卡優惠頁沒有標明銀行時，本站也不補寫。"
+        "「最優惠」整理自各經銷商官網（STUDIO A、德誼數位、iStore、燦坤）與新聞報導，讀取日 2026/10/08；優仕找不到官方來源，所以標示「不知道」。促銷內容、名額與期限常變動，一切以店家公告為準。購買建議是依已查到的資料整理，不是保證，也不是投資或財務建議。德誼官網的刷卡優惠頁沒有標明銀行時，本站也不補寫。",
+        "「熱賣儀表板」的數字來自電信、電商與德誼公布的初期銷售、預約與問卷結果（出處與日期都標在每張圖旁，資料讀取日 2026/10/08）。這不是 Apple 的官方銷量，也沒有實際台數；各家口徑不同，所以不合併、不平均。斜紋長條是由原文推算的數字，「近」「約」「逾」保留報導的原文用字。"
       ]),
       foot: "<strong>僅供課堂示範，非投資、非購買建議。</strong>iPhone 18 Pro 與 iPhone Duo 功能與特色展示 · 資料讀取日 2026/10/08",
       go: "查看特色與話術 ›", pick_h: "選一個客群，看話術", persona_aria: "客群", mode_aria: "模式", mode_script: "看話術", mode_practice: "情境對話練習", mode_voice: "語音練習",
@@ -811,6 +868,16 @@ footer.end { padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
       buy_carrier: "Telecom carrier stores are not included (Apple’s official page does not show them either).",
       buy_data: function (n, d) { return "Data dated " + d + ", " + n + " stores. Apple’s page gives only distances, so the positions are worked out from them and may be off by tens of meters. Distances are straight-line, not walking or driving distance."; },
       buy_official: "Check on Apple’s official page", buy_official_hint: "(When you press it, this spot’s coordinates, to about 100 m, are passed to Apple’s site.)",
+      nav_sales: "Sales dashboard", hero_sales: "Sales dashboard",
+      sales_title: "Sales dashboard", sales_sub: "Early sales, reservation and survey figures published by resellers: which models, colors and capacities sell well.",
+      sales_close: "Close", sales_nodata: "The sales data file (data/sales.js) was not found. Make sure it is uploaded together with index.html.",
+      sales_tab_model: "Model", sales_tab_color: "Color", sales_tab_cap: "Capacity", sales_tab_growth: "Growth", sales_tab_duo: "iPhone Duo", sales_tab_aria: "Choose what to look at",
+      sales_warn: function (d) { return "This is not Apple’s official sales data, and no unit counts were given. The figures are early numbers published by carriers, online shops and resellers around mid-September (data read " + d + "). Each source uses a different basis, so each gets its own chart, with nothing merged or averaged."; },
+      sales_sum_h: "How to read it",
+      sales_k_presale: "Pre-orders", sales_k_reserve: "Reservations", sales_k_survey: "Survey", sales_k_launch: "Launch day",
+      sales_lg: "Pre-orders and reservations: customers ordered or signed up. Survey: what people say they want, not purchases. Launch day: resellers’ statements for opening day.",
+      sales_lg_d: "Striped bar: derived from the report (for example 100% minus the known part)", sales_lg_a: "“Nearly”, “about”, “over”: kept as the report words it",
+      sales_src: "Source", sales_foot: "These numbers need refreshing when new figures come out, and what resellers publish later may differ.",
       nav_deal: "Best deals", hero_deal: "Best deals", deal_btn: "Compare best deals",
       deal_title: "Best deals", deal_sub: "Compares the main resellers’ current iPhone 18 Pro and iPhone Duo offers and gives a buying recommendation.",
       deal_close: "Close", deal_seg_aria: "Choose a model", deal_nodata: "The deals data file (data/deals.js) was not found. Make sure it is uploaded together with index.html.",
@@ -851,7 +918,8 @@ footer.end { padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
         "Voice practice: after you press record, your browser sends the audio to its own cloud service to turn it into text (Chrome and Edge use Google or Microsoft; Safari uses Apple). This site does not store recordings or upload anything, and scoring happens in your browser. Scoring is keyword and rule matching; it cannot understand meaning and may misjudge because of speech-recognition errors, so check and correct the transcript first. It is not a judgment of how well you spoke.",
         "English color and feature names are translated from Apple’s Taiwan (Traditional Chinese) pages and may differ from Apple’s official English names.",
         "The “Where to buy?” store data was compiled from Apple’s official <a href=\"https://locate.apple.com/tw/en/sales?pt=3\" target=\"_blank\" rel=\"noopener\">locator</a> page (stores that sell iPhone, Taipei City and New Taipei City, read 2026/10/08), and leaves out telecom carrier stores. Apple’s page gives only distances, so the coordinates were worked out from the distances from several search points and are not official coordinates; a store being listed does not mean it has stock. The map uses Leaflet and OpenStreetMap tiles (© OpenStreetMap contributors).",
-        "“Best deals” is compiled from the resellers’ own sites (STUDIO A, Data Express, iStore, Tkec) and news reports, read 2026/10/08; I found no official source for Youth, so it is marked “I do not know”. Offers, quotas and dates change often, so the store’s own announcement always prevails. The buying recommendation is a summary of what I could verify, not a guarantee and not investment or financial advice. Where Data Express’s card-offer page does not name the bank, this site does not fill it in."
+        "“Best deals” is compiled from the resellers’ own sites (STUDIO A, Data Express, iStore, Tkec) and news reports, read 2026/10/08; I found no official source for Youth, so it is marked “I do not know”. Offers, quotas and dates change often, so the store’s own announcement always prevails. The buying recommendation is a summary of what I could verify, not a guarantee and not investment or financial advice. Where Data Express’s card-offer page does not name the bank, this site does not fill it in.",
+        "The “Sales dashboard” figures come from early sales, reservation and survey results published by carriers, online shops and Data Express (the source and date are shown on each chart; data read 2026/10/08). This is not Apple’s official sales data and no unit counts were given; each source uses a different basis, so nothing is merged or averaged. Striped bars are numbers derived from the report, and “nearly”, “about” and “over” keep the report’s own wording."
       ]),
       foot: "<strong>For classroom demonstration only. Not investment or purchase advice.</strong>iPhone 18 Pro and iPhone Duo features showcase · data read 2026/10/08",
       go: "See the feature and scripts ›", pick_h: "Pick a customer type to see the script", persona_aria: "Customer types", mode_aria: "Mode", mode_script: "Read the scripts", mode_practice: "Role-play practice", mode_voice: "Voice practice",
@@ -2974,7 +3042,7 @@ footer.end { padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
     if (l === LANG) return;
     if (recWant) stopRec();
     vs = { key: "", q: 0, text: "", secs: 0, res: "" };
-    applyLang(l, true); renderAll(); renderBuy(false); renderDeal();
+    applyLang(l, true); renderAll(); renderBuy(false); renderDeal(); renderSales();
   }
 
   /* ============================================================
@@ -3272,9 +3340,9 @@ footer.end { padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
     if (b) { var tr = DS.trig; closeDeal(true); openBuy(tr, b.getAttribute("data-bbrand")); }
   });
   document.addEventListener("keydown", function (e) {
-    var P = BS.open ? BP : DS.open ? DP : null;
+    var P = BS.open ? BP : DS.open ? DP : SS.open ? SP : null;
     if (!P) return;
-    if (e.key === "Escape") { if (BS.open) closeBuy(); else closeDeal(); return; }
+    if (e.key === "Escape") { if (BS.open) closeBuy(); else if (DS.open) closeDeal(); else closeSales(); return; }
     if (e.key !== "Tab") return;
     var f = [].slice.call(P.querySelectorAll('a[href],button:not([disabled]),select,[tabindex="0"]')).filter(function (x) { return x.offsetParent !== null; });
     if (!f.length) return;
@@ -3284,11 +3352,69 @@ footer.end { padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
     else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
   });
 
+  /* ============================================================
+     熱賣儀表板：業者公布的初期銷售／預約／問卷數據（資料：data/sales.js，window.SALES）
+     每個來源各自成一張卡，不合併；推算的長條以斜紋標示，沒有數字的只寫文字。
+     ============================================================ */
+  var SP = document.getElementById("salesPanel");
+  var SS = { open: false, tab: "model", trig: null };
+  var STABS = ["model", "color", "cap", "growth", "duo"];
+  function salesData() { var d = window.SALES; return d && d.tabs ? d : null; }
+  function salesCard(c, L) {
+    var kindCls = { presale: "o", launch: "o", reserve: "on", survey: "n" }[c.kind] || "";
+    var max = c.max || 100;
+    var rows = (c.rows || []).map(function (r) {
+      if (r.na) return '<div class="brow na"><span class="bl">' + esc(r.l[L]) + '</span><span class="bna">' + esc(r.vl[L]) + "</span></div>";
+      var w = Math.max(2, Math.min(100, r.v / max * 100));
+      return '<div class="brow" role="img" aria-label="' + esc(r.l[L] + "：" + r.vl[L]) + '"><span class="bl">' + esc(r.l[L]) + '</span><span class="btrack"><i class="c-' + r.c + (r.d ? " d" : "") + '" style="width:' + w.toFixed(1) + '%"></i></span><span class="bv">' + esc(r.vl[L]) + "</span></div>";
+    }).join("");
+    var tx = c.text && c.text.length ? '<ul class="slist">' + c.text.map(function (x) { return "<li>" + esc(x[L]) + "</li>"; }).join("") + "</ul>" : "";
+    return '<article class="scard"><div><h3>' + esc(c.t[L]) + '</h3><div class="smeta">' + dchip(kindCls, "sales_k_" + c.kind) + "<span>" + esc(c.per[L]) + "</span></div></div>" + rows + tx +
+      (c.note ? '<p class="snote">' + esc(c.note[L]) + "</p>" : "") +
+      '<p class="ssrc">' + esc(t("sales_src")) + '：<a href="' + esc(c.u) + '" target="_blank" rel="noopener">' + esc(c.s[L]) + "</a></p></article>";
+  }
+  function renderSales() {
+    if (!SS.open) return;
+    var D = salesData(), el = document.getElementById("salesBody"), keep = el.scrollTop;
+    if (!D) { el.innerHTML = '<p class="buy-status warn">' + esc(t("sales_nodata")) + "</p>"; return; }
+    var L = LANG === "zh" ? "z" : "e";
+    var h = '<p class="buy-status warn">' + esc(t("sales_warn", String(D.read).replace(/-/g, "/"))) + "</p>";
+    h += '<div class="kpis">' + (D.kpi || []).map(function (k) { return '<button type="button" class="kpi k-' + k.c + '" data-stab="' + k.tab + '"><span class="kh">' + esc(k.h[L]) + '</span><span class="kv">' + esc(k.v[L]) + '</span><span class="ks">' + esc(k.s[L]) + "</span></button>"; }).join("") + "</div>";
+    h += '<div class="stabs" role="group" aria-label="' + esc(t("sales_tab_aria")) + '">' + STABS.map(function (k) { return '<button type="button" class="dseg-b' + (SS.tab === k ? " on" : "") + '" data-stab="' + k + '" aria-pressed="' + (SS.tab === k) + '">' + esc(t("sales_tab_" + k)) + "</button>"; }).join("") + "</div>";
+    h += '<div class="slegend"><span>' + esc(t("sales_lg")) + '</span><span><i class="sw"></i>' + esc(t("sales_lg_d")) + "</span><span>" + esc(t("sales_lg_a")) + "</span></div>";
+    h += (D.tabs[SS.tab] || []).map(function (c) { return salesCard(c, L); }).join("");
+    h += '<section class="deal-best"><h3>' + esc(t("sales_sum_h")) + "</h3><ul>" + D.sum.map(function (x) { return "<li>" + esc(x[L]) + "</li>"; }).join("") + "</ul></section>";
+    h += '<div class="dfoot"><p>' + esc(t("sales_foot")) + "</p><p>" + esc(t("deal_foot3")) + "</p></div>";
+    el.innerHTML = h; el.scrollTop = keep;
+  }
+  function openSales(trig) {
+    SS.trig = trig || null; SS.open = true;
+    document.getElementById("salesBack").hidden = false; SP.hidden = false;
+    document.body.classList.add("buy-open"); document.documentElement.style.overflow = "hidden";
+    document.getElementById("salesBody").scrollTop = 0;
+    renderSales();
+    setTimeout(function () { var b = SP.querySelector(".dseg-b.on"); if (b) b.focus(); }, 30);
+  }
+  function closeSales(nf) {
+    if (!SS.open) return;
+    SS.open = false; SP.hidden = true; document.getElementById("salesBack").hidden = true;
+    document.body.classList.remove("buy-open"); document.documentElement.style.overflow = "";
+    if (!nf) refocus(SS.trig);
+  }
+  document.getElementById("salesClose").addEventListener("click", function () { closeSales(); });
+  document.getElementById("salesBack").addEventListener("click", function () { closeSales(); });
+  SP.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-stab]");
+    if (b) { SS.tab = b.getAttribute("data-stab"); renderSales(); }
+  });
+
   /* ---------- 事件 ---------- */
   document.addEventListener("click", function (e) {
+    var sd = e.target.closest("[data-sales]");
+    if (sd) { e.preventDefault(); if (BS.open) closeBuy(true); if (DS.open) closeDeal(true); openSales(sd); return; }
     var dd = e.target.closest("[data-deal]");
-    if (dd) { e.preventDefault(); var tr = dd.getAttribute("data-deal") === "buy" ? BS.trig : dd; if (BS.open) closeBuy(true); openDeal(tr); return; }
-    var bb = e.target.closest("[data-buy]"); if (bb) { e.preventDefault(); if (DS.open) closeDeal(true); openBuy(bb); return; }
+    if (dd) { e.preventDefault(); var tr = dd.getAttribute("data-deal") === "buy" ? BS.trig : dd; if (BS.open) closeBuy(true); if (SS.open) closeSales(true); openDeal(tr); return; }
+    var bb = e.target.closest("[data-buy]"); if (bb) { e.preventDefault(); if (DS.open) closeDeal(true); if (SS.open) closeSales(true); openBuy(bb); return; }
     var lb = e.target.closest("#langBtn"); if (lb) { setLang(LANG === "zh" ? "en" : "zh"); return; }
     var b = e.target.closest("[data-model]"); if (!b) return;
     setModel(b.getAttribute("data-model"));
