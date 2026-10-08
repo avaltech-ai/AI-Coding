@@ -414,6 +414,20 @@ footer.end { padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
 .buy-chip { display: inline-flex; align-items: center; gap: 8px; padding: 4px 4px 4px 12px; border-radius: 999px; background: var(--soft-accent); font-size: 14px; align-self: flex-start; }
 .buy-chip button { width: 28px; height: 28px; border-radius: 50%; border: 0; background: var(--pill); line-height: 1; }
 @media (max-width: 480px) { .gnav nav { display: none; } }
+
+/* 對話插圖 */
+.msg { display: flex; align-items: flex-end; gap: 10px; margin-top: 10px; max-width: 100%; }
+.msg.c { align-self: flex-start; }
+.msg.s { align-self: flex-end; flex-direction: row-reverse; }
+.mcol { display: flex; flex-direction: column; gap: 4px; min-width: 0; max-width: min(600px, calc(100% - 66px)); }
+.msg.c .mcol { align-items: flex-start; }
+.msg.s .mcol { align-items: flex-end; }
+.msg .who { margin-top: 0; }
+.msg .bub { max-width: 100%; }
+.av { flex: none; width: 56px; height: 56px; border-radius: 50%; overflow: hidden; box-shadow: 0 1px 4px rgba(0, 0, 0, .18); background: #FFFFFF; }
+.av svg { display: block; width: 100%; height: 100%; }
+.vprompt .msg { margin-top: 0; }
+@media (max-width: 560px) { .av { width: 44px; height: 44px; } .msg { gap: 8px; } .mcol { max-width: calc(100% - 54px); } }
 </style>
 </head>
 <body>
@@ -2537,6 +2551,57 @@ footer.end { padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
       "<li>" + esc(t("pr_best_line", BEST[pr.key], max)) + "</li></ul>" + practiceAdvice(d) +
       '<div class="acts"><button type="button" class="pbtn primary" data-act="restart">' + esc(t("pr_again")) + '</button><button type="button" class="pbtn" data-act="toscript">' + esc(t("pr_toscript")) + "</button></div></div>";
   }
+  /* ---------- 對話插圖：可愛的客人與店員（內嵌 SVG，客人的表情會隨回答變化） ---------- */
+  var AV_SKIN = ["#FFD9B8", "#F4C7A1", "#E5AC82", "#FFE3CC"], AV_HAIR = ["#3B2A20", "#6B4423", "#22222E", "#B86B2C"];
+  var AV_SHIRT = ["#FF9AA2", "#FFD27F", "#8FD9A8", "#B5A0FF"], AV_BG = ["#FFE8EC", "#FFF3D6", "#DFF5E6", "#ECE6FF"];
+  function hashS(x) { var h = 7, i; for (i = 0; i < x.length; i++) h = (h * 31 + x.charCodeAt(i)) >>> 0; return h; }
+  function avEyes(mood) {
+    if (mood === "happy") return '<path d="M36 48q4-5 8 0M52 48q4-5 8 0" stroke="#3B2A20" stroke-width="2.4" fill="none" stroke-linecap="round"/>';
+    return '<circle cx="40" cy="48" r="3" fill="#2B2B33"/><circle cx="56" cy="48" r="3" fill="#2B2B33"/><circle cx="41" cy="47" r="1" fill="#FFFFFF"/><circle cx="57" cy="47" r="1" fill="#FFFFFF"/>';
+  }
+  function avMouth(mood) {
+    if (mood === "happy") return '<path d="M41 54q7 11 14 0z" fill="#B23A48"/>';
+    if (mood === "sad") return '<path d="M42 59q6-5 12 0" fill="none" stroke="#7A4A3A" stroke-width="2.2" stroke-linecap="round"/>';
+    if (mood === "curious") return '<ellipse cx="48" cy="57" rx="2.6" ry="3" fill="#B23A48"/>';
+    return '<path d="M42 55q6 5 12 0" fill="none" stroke="#7A4A3A" stroke-width="2.2" stroke-linecap="round"/>';
+  }
+  function avBrows(mood, hair) {
+    if (mood === "sad") return '<path d="M35 40l9 2M61 40l-9 2" stroke="' + hair + '" stroke-width="2.2" stroke-linecap="round"/>';
+    return '<path d="M36 41q4-3 8 0M52 41q4-3 8 0" fill="none" stroke="' + hair + '" stroke-width="2.2" stroke-linecap="round"/>';
+  }
+  function avExtra(mood) {
+    if (mood === "happy") return '<path d="M76 20l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#FFC107"/><path d="M16 28l1.5 3.5 3.5 1.5-3.5 1.5L16 38l-1.5-3.5L11 33l3.5-1.5z" fill="#FFC107"/>';
+    if (mood === "sad") return '<path d="M71 36c3.5 5 4.5 8 0 10-4.5-2-3.5-5 0-10z" fill="#9FD3FF"/>';
+    if (mood === "curious") return '<text x="68" y="26" font-size="20" font-weight="700" fill="#FF9500" font-family="sans-serif" transform="rotate(12 72 20)">?</text>';
+    return "";
+  }
+  function avatar(kind, seed, mood) {
+    var h = hashS(seed || "x"), sk, hr, sh, bg, style = h % 4, body, hairSvg, acc = "";
+    if (kind === "s") {
+      sk = AV_SKIN[0]; hr = "#2B2433";
+      return '<svg viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" focusable="false"><circle cx="48" cy="48" r="48" fill="#DCEBFF"/>' +
+        '<path d="M14 96c2-18 16-26 34-26s32 8 34 26z" fill="#4C9EFF"/><path d="M38 72l10 12 10-12" fill="#FFFFFF"/><path d="M40 73l8 14 8-14" fill="none" stroke="#FF9500" stroke-width="2.4"/>' +
+        '<rect x="52" y="82" width="12" height="9" rx="2" fill="#FFFFFF" stroke="#DCE6F5"/><circle cx="58" cy="85.5" r="1.8" fill="#4C9EFF"/>' +
+        '<circle cx="48" cy="46" r="22" fill="' + sk + '"/><path d="M25 45c-3-19 10-28 24-28 13 0 23 8 22 28-3-8-9-14-17-15-9 4-19 6-29 15z" fill="' + hr + '"/>' +
+        '<path d="M36 41q4-3 8 0M52 41q4-3 8 0" fill="none" stroke="' + hr + '" stroke-width="2.2" stroke-linecap="round"/>' + avEyes("happy") + avMouth("happy") +
+        '<ellipse cx="34" cy="55" rx="4.5" ry="3" fill="#FF8FA3" opacity=".45"/><ellipse cx="62" cy="55" rx="4.5" ry="3" fill="#FF8FA3" opacity=".45"/>' + '</svg>';
+    }
+    sk = AV_SKIN[(h >>> 3) % 4]; hr = AV_HAIR[(h >>> 5) % 4]; sh = AV_SHIRT[(h >>> 7) % 4]; bg = AV_BG[(h >>> 7) % 4];
+    if (style === 0) hairSvg = '<path d="M25 44c-2-18 10-27 23-27s25 9 23 27c-5-9-13-13-23-13s-18 4-23 13z" fill="' + hr + '"/>';
+    else if (style === 1) hairSvg = '<circle cx="48" cy="17" r="8" fill="' + hr + '"/><path d="M25 44c-2-18 10-27 23-27s25 9 23 27c-5-9-13-13-23-13s-18 4-23 13z" fill="' + hr + '"/>';
+    else if (style === 2) hairSvg = '<path d="M25 44c-2-18 10-27 23-27s25 9 23 27c-5-9-13-13-23-13s-18 4-23 13z" fill="' + hr + '"/>';
+    else hairSvg = '<path d="M24 42c0-15 11-24 24-24s24 9 24 24z" fill="' + sh + '"/><path d="M44 36h36a3 3 0 0 1 0 6H44z" fill="' + sh + '"/><path d="M24 42h48" stroke="#FFFFFF" stroke-width="1.6" opacity=".6"/>';
+    if (style === 1) acc = '<g fill="none" stroke="#3A3A44" stroke-width="2"><circle cx="40" cy="48" r="7.5"/><circle cx="56" cy="48" r="7.5"/><path d="M47.5 48h1"/></g>';
+    if (style === 2) acc = '<path d="M24 46a24 24 0 0 1 48 0" fill="none" stroke="#3A3A44" stroke-width="4"/><rect x="18" y="42" width="9" height="15" rx="4.5" fill="#FF5A5F"/><rect x="69" y="42" width="9" height="15" rx="4.5" fill="#FF5A5F"/>';
+    body = '<path d="M14 96c2-18 16-26 34-26s32 8 34 26z" fill="' + sh + '"/><path d="M40 72q8 7 16 0" fill="none" stroke="rgba(0,0,0,.12)" stroke-width="2"/>';
+    return '<svg viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" focusable="false"><circle cx="48" cy="48" r="48" fill="' + bg + '"/>' + body +
+      '<circle cx="48" cy="46" r="22" fill="' + sk + '"/>' + hairSvg + avBrows(mood, style === 3 ? "#5A3A2A" : hr) + avEyes(mood) + avMouth(mood) +
+      '<ellipse cx="34" cy="55" rx="4.5" ry="3" fill="#FF8FA3" opacity=".45"/><ellipse cx="62" cy="55" rx="4.5" ry="3" fill="#FF8FA3" opacity=".45"/>' + acc + avExtra(mood) + "</svg>";
+  }
+  function msgHTML(kind, who, text, seed, mood) {
+    return '<div class="msg ' + kind + '"><div class="av" aria-hidden="true">' + avatar(kind, seed, mood) + '</div><div class="mcol"><div class="who">' + esc(who) + '</div><div class="bub ' + kind + '">' + esc(text) + "</div></div></div>";
+  }
+
   function renderPractice(f, p) {
     var d = DIALOGS[dkey()];
     if (!d) return '<p class="empty">' + esc(t("pr_none")) + "</p>";
@@ -2546,9 +2611,9 @@ footer.end { padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
       '<div class="chat" aria-live="polite">';
     for (var i = 0; i <= last; i++) {
       var q = d[i], pk = pr.picks[i];
-      h += '<div class="who">' + esc(t("who_cust", p.name)) + '</div><div class="bub c">' + esc(q.c) + "</div>";
+      h += msgHTML("c", t("who_cust", p.name), q.c, p.name, "curious");
       if (pk) {
-        h += '<div class="who r">' + esc(t("who_you")) + '</div><div class="bub s">' + esc(q.o[pk.idx].t) + '</div><div class="who">' + esc(t("who_cust_short")) + '</div><div class="bub c">' + esc(react[pk.k][pk.ri]) + "</div>" + fbHTML(q.o[pk.idx], q.o[0]);
+        h += msgHTML("s", t("who_you"), q.o[pk.idx].t, "clerk", "happy") + msgHTML("c", t("who_cust_short"), react[pk.k][pk.ri], p.name, pk.k === "g" ? "happy" : pk.k === "o" ? "ok" : "sad") + fbHTML(q.o[pk.idx], q.o[0]);
       }
     }
     h += "</div>";
@@ -2729,7 +2794,7 @@ footer.end { padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
     return '<div class="voice"><div class="qchips" role="group" aria-label="' + esc(t("vo_q_aria")) + '">' + d.map(function (q, i) {
       var b = VBEST[key + "#" + i];
       return '<button type="button" class="qchip" data-vq="' + i + '" aria-pressed="' + (i === vs.q) + '">' + esc(t("vo_qchip", i + 1)) + (b !== undefined ? '<span class="best">' + esc(t("best_n", b)) + "</span>" : "") + "</button>";
-    }).join("") + '</div><div class="vprompt"><div class="who">' + esc(t("who_cust", p.name)) + '</div><div class="bub c">' + esc(d[vs.q].c) + "</div></div>" +
+    }).join("") + '</div><div class="vprompt">' + msgHTML("c", t("who_cust", p.name), d[vs.q].c, p.name, "curious") + "</div>" +
       '<p class="vnote">' + esc(t("vo_how")) + "</p>" +
       '<p class="vnote">' + esc(t("vo_privacy")) + "</p>" + warn +
       '<div class="vctl"><button type="button" class="recbtn" id="vrec" data-vact="rec" aria-pressed="false"' + (SR ? "" : " disabled") + ">" + esc(vs.text ? t("rec_cont") : t("rec_start")) + '</button><span class="vtimer" id="vtimer">' + fmtT(vs.secs) + '</span><span class="vstatus" id="vstatus" aria-live="polite"></span></div>' +
