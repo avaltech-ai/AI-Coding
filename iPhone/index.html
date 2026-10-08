@@ -466,6 +466,36 @@ footer.end { padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
 .slegend { font-size: 13px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: center; }
 .slegend .sw { display: inline-block; width: 28px; height: 10px; border-radius: 999px; background: var(--accent); vertical-align: middle; margin-right: 6px; background-image: repeating-linear-gradient(45deg, rgba(255, 255, 255, .5) 0 4px, transparent 4px 8px); }
 @media (max-width: 560px) { .brow { grid-template-columns: 1fr auto; } .brow .bl { grid-column: 1 / -1; } .brow.na { grid-template-columns: 1fr; } .stabs .dseg-b { padding: 0 12px; } }
+
+/* 動態效果：只動透明度與位置；系統設定「減少動態效果」時完全不啟用 */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes rise { from { opacity: 0; transform: translateY(16px); } }
+  @keyframes floaty { 50% { transform: translateY(-8px); } }
+  @keyframes popin { from { opacity: 0; transform: translateY(8px) scale(.96); } }
+  @keyframes sheetUp { from { opacity: 0; transform: translateY(28px); } }
+  @keyframes dlgIn { from { opacity: 0; transform: translate(-50%, -47%); } }
+  @keyframes fadeIn { from { opacity: 0; } }
+  @keyframes barIn { from { transform: scaleX(0); } }
+  @keyframes fabIn { from { opacity: 0; transform: translateY(16px) scale(.9); } }
+  .hero .mswitch, .hero .eyebrow, .hero h1, .hero .sub, .heroacts { animation: rise .7s cubic-bezier(.2, .7, .2, 1) both; }
+  .hero .eyebrow { animation-delay: .08s; } .hero h1 { animation-delay: .16s; } .hero .sub { animation-delay: .26s; } .heroacts { animation-delay: .36s; }
+  .hero figure img { animation: floaty 7s ease-in-out 1.2s infinite; }
+  .ftab { transition: box-shadow .2s, border-color .2s, transform .2s; }
+  .ftab:not([aria-selected="true"]):hover { transform: translateY(-3px); box-shadow: 0 10px 26px rgba(0, 0, 0, .09); }
+  .btn, .pbtn, .opt, .ftab { transition-property: box-shadow, border-color, transform, filter, background; }
+  .btn:active, .pbtn:active, .opt:active { transform: scale(.98); }
+  html.rv-on .rv { transition: opacity .6s ease, transform .6s cubic-bezier(.2, .7, .2, 1); }
+  html.rv-on .rv:not(.in) { opacity: 0; transform: translateY(20px); }
+  .panel.swap { animation: rise .4s cubic-bezier(.2, .7, .2, 1) both; }
+  .msg.pop { animation: popin .35s cubic-bezier(.2, .7, .2, 1) both; }
+  .buy:not([hidden]) { animation: sheetUp .3s cubic-bezier(.2, .7, .2, 1) both; }
+  .buy-back:not([hidden]) { animation: fadeIn .25s ease both; }
+  .buyfab { animation: fabIn .4s cubic-bezier(.2, .7, .2, 1) both; }
+  .btrack i { transform-origin: left center; animation: barIn .8s cubic-bezier(.2, .7, .2, 1) both; }
+  .kpi, .scard, .dshop, .deal-best { animation: rise .45s cubic-bezier(.2, .7, .2, 1) both; }
+  .kpi:nth-child(2) { animation-delay: .05s; } .kpi:nth-child(3) { animation-delay: .1s; } .kpi:nth-child(4) { animation-delay: .15s; }
+}
+@media (prefers-reduced-motion: no-preference) and (min-width: 900px) { .buy:not([hidden]) { animation-name: dlgIn; } }
 </style>
 </head>
 <body>
@@ -2673,8 +2703,8 @@ footer.end { padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
       '<circle cx="48" cy="46" r="22" fill="' + sk + '"/>' + hairSvg + avBrows(mood, style === 3 ? "#5A3A2A" : hr) + avEyes(mood) + avMouth(mood) +
       '<ellipse cx="34" cy="55" rx="4.5" ry="3" fill="#FF8FA3" opacity=".45"/><ellipse cx="62" cy="55" rx="4.5" ry="3" fill="#FF8FA3" opacity=".45"/>' + acc + avExtra(mood) + "</svg>";
   }
-  function msgHTML(kind, who, text, seed, mood) {
-    return '<div class="msg ' + kind + '"><div class="av" aria-hidden="true">' + avatar(kind, seed, mood) + '</div><div class="mcol"><div class="who">' + esc(who) + '</div><div class="bub ' + kind + '">' + esc(text) + "</div></div></div>";
+  function msgHTML(kind, who, text, seed, mood, pop) {
+    return '<div class="msg ' + kind + (pop ? " pop" : "") + '"><div class="av" aria-hidden="true">' + avatar(kind, seed, mood) + '</div><div class="mcol"><div class="who">' + esc(who) + '</div><div class="bub ' + kind + '">' + esc(text) + "</div></div></div>";
   }
 
   function renderPractice(f, p) {
@@ -2686,9 +2716,9 @@ footer.end { padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
       '<div class="chat" aria-live="polite">';
     for (var i = 0; i <= last; i++) {
       var q = d[i], pk = pr.picks[i];
-      h += msgHTML("c", t("who_cust", p.name), q.c, p.name, "curious");
+      h += msgHTML("c", t("who_cust", p.name), q.c, p.name, "curious", i === last && !pk);
       if (pk) {
-        h += msgHTML("s", t("who_you"), q.o[pk.idx].t, "clerk", "happy") + msgHTML("c", t("who_cust_short"), react[pk.k][pk.ri], p.name, pk.k === "g" ? "happy" : pk.k === "o" ? "ok" : "sad") + fbHTML(q.o[pk.idx], q.o[0]);
+        h += msgHTML("s", t("who_you"), q.o[pk.idx].t, "clerk", "happy", i === last) + msgHTML("c", t("who_cust_short"), react[pk.k][pk.ri], p.name, pk.k === "g" ? "happy" : pk.k === "o" ? "ok" : "sad", i === last) + fbHTML(q.o[pk.idx], q.o[0]);
       }
     }
     h += "</div>";
@@ -2869,7 +2899,7 @@ footer.end { padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
     return '<div class="voice"><div class="qchips" role="group" aria-label="' + esc(t("vo_q_aria")) + '">' + d.map(function (q, i) {
       var b = VBEST[key + "#" + i];
       return '<button type="button" class="qchip" data-vq="' + i + '" aria-pressed="' + (i === vs.q) + '">' + esc(t("vo_qchip", i + 1)) + (b !== undefined ? '<span class="best">' + esc(t("best_n", b)) + "</span>" : "") + "</button>";
-    }).join("") + '</div><div class="vprompt">' + msgHTML("c", t("who_cust", p.name), d[vs.q].c, p.name, "curious") + "</div>" +
+    }).join("") + '</div><div class="vprompt">' + msgHTML("c", t("who_cust", p.name), d[vs.q].c, p.name, "curious", true) + "</div>" +
       '<p class="vnote">' + esc(t("vo_how")) + "</p>" +
       '<p class="vnote">' + esc(t("vo_privacy")) + "</p>" + warn +
       '<div class="vctl"><button type="button" class="recbtn" id="vrec" data-vact="rec" aria-pressed="false"' + (SR ? "" : " disabled") + ">" + esc(vs.text ? t("rec_cont") : t("rec_start")) + '</button><span class="vtimer" id="vtimer">' + fmtT(vs.secs) + '</span><span class="vstatus" id="vstatus" aria-live="polite"></span></div>' +
@@ -3028,14 +3058,15 @@ footer.end { padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
   }
   function renderAll() { renderSwitch(); renderHero(); renderTabs(); renderPanel(); renderCmp(); }
 
+  function swapAnim() { PN.classList.remove("swap"); void PN.offsetWidth; PN.classList.add("swap"); }
   function setHash() { try { history.replaceState(null, "", "#" + M().features[featIdx].id); } catch (e) {} }
   function setModel(k) {
     if (k === model) return;
-    model = k; featIdx = 0; perIdx = 0; renderAll();
+    model = k; featIdx = 0; perIdx = 0; renderAll(); swapAnim();
     try { history.replaceState(null, "", "#" + (k === "duo" ? "duo" : "pro")); } catch (e) {}
   }
   function setFeature(i, scroll) {
-    featIdx = i; perIdx = 0; renderTabs(); renderPanel(); setHash();
+    featIdx = i; perIdx = 0; renderTabs(); renderPanel(); setHash(); swapAnim();
     if (scroll) { PN.scrollIntoView({ behavior: "smooth", block: "start" }); }
   }
   function setLang(l) {
@@ -3425,8 +3456,8 @@ footer.end { padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
   });
   PN.addEventListener("click", function (e) {
     var x = e.target.closest("[data-p],[data-mode],[data-opt],[data-act]"); if (!x) return;
-    if (x.hasAttribute("data-p")) { perIdx = +x.getAttribute("data-p"); renderPanel(); return; }
-    if (x.hasAttribute("data-mode")) { mode = x.getAttribute("data-mode"); renderPanel(); return; }
+    if (x.hasAttribute("data-p")) { perIdx = +x.getAttribute("data-p"); renderPanel(); swapAnim(); return; }
+    if (x.hasAttribute("data-mode")) { mode = x.getAttribute("data-mode"); renderPanel(); swapAnim(); return; }
     var d = DIALOGS[dkey()];
     if (x.hasAttribute("data-opt") && pr && pr.stage === "ask") {
       var idx = +x.getAttribute("data-opt"), o = d[pr.turn].o[idx];
@@ -3467,6 +3498,18 @@ footer.end { padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
     });
   }
   renderAll();
+
+  /* ---------- 捲動進場：只對一開始在畫面外的區塊做淡入上移；減少動態效果或不支援時完全不做 ---------- */
+  (function () {
+    var mq = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (!("IntersectionObserver" in window) || (mq && mq.matches)) return;
+    var els = [].slice.call(document.querySelectorAll(".sechead, #ftabs, #panel, .tablewrap, #srcList, #discList")).filter(function (e) { return e.getBoundingClientRect().top > window.innerHeight; });
+    if (!els.length) return;
+    var io = new IntersectionObserver(function (es) { es.forEach(function (x) { if (x.isIntersecting) { x.target.classList.add("in"); io.unobserve(x.target); } }); }, { threshold: 0.05, rootMargin: "0px 0px -5% 0px" });
+    els.forEach(function (e) { e.classList.add("rv"); io.observe(e); });
+    document.documentElement.classList.add("rv-on");
+    window.addEventListener("beforeprint", function () { els.forEach(function (e) { e.classList.add("in"); }); });
+  })();
 })();
 </script>
 </body>
