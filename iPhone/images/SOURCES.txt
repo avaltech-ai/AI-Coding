@@ -1,0 +1,17 @@
+圖片來源：Apple 台灣官網 iPhone 18 Pro 頁面（https://www.apple.com/tw/iphone-18-pro/），2026/10/08 下載。
+圖片版權屬 Apple Inc.，本站僅供課堂示範使用。
+
+hero.webp <- https://www.apple.com/tw/iphone-18-pro/images/overview/aio/hero__elo7tt0mnqy6_large.webp
+vapor-chamber.webp <- https://www.apple.com/tw/iphone-18-pro/images/overview/performance/vapor_chamber__dyn98zs14ryq_large.webp
+size.webp <- https://www.apple.com/tw/iphone-18-pro/images/overview/product-viewer/size__ufk3tqa1f5e2_large.webp
+durability.webp <- https://www.apple.com/tw/iphone-18-pro/images/overview/product-viewer/durability__gluy1en01nqm_large.webp
+dynamic-island.jpg <- https://www.apple.com/tw/iphone-18-pro/images/overview/product-viewer/dynamic_island_endframe__edszr68pgo66_large.jpg
+action-button.webp <- https://www.apple.com/tw/iphone-18-pro/images/overview/product-viewer/action_button__f9p8n5h9xk66_large.webp
+
+備註：battery-hero、battery-charge 兩張含 Apple TV 影集劇照，已刪除、未使用。
+
+iPhone Duo 圖片來源：Apple 台灣官網 iPhone Duo 頁面（https://www.apple.com/tw/iphone-duo/），2026/10/08 下載。版權屬 Apple Inc.。
+duo-hero.webp <- https://www.apple.com/tw/iphone-duo/images/overview/media-hero/hero__dbnzxlb3ia2q_large.webp
+duo-landscape.webp <- https://www.apple.com/tw/iphone-duo/images/overview/product-viewer/landscape__f7x2oe1oxemy_large.webp
+duo-camera.webp <- https://www.apple.com/tw/iphone-duo/images/overview/camera/photo_editing__cgylxrvrkh6u_large.webp
+備註：duo-portrait、duo-fold 兩張含 Apple TV 影集劇照，已刪除、未使用。
