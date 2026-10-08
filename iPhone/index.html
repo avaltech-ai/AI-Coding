@@ -428,6 +428,13 @@ footer.end { padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
 .av svg { display: block; width: 100%; height: 100%; }
 .vprompt .msg { margin-top: 0; }
 @media (max-width: 560px) { .av { width: 44px; height: 44px; } .msg { gap: 8px; } .mcol { max-width: calc(100% - 54px); } }
+
+/* 特色卡片插圖 */
+.ftab .fic { flex: none; width: 64px; height: 64px; margin-bottom: 8px; }
+.ftab .fic svg { display: block; width: 100%; height: 100%; transition: transform .25s ease; transform-origin: 50% 70%; }
+.ftab:hover .fic svg, .ftab[aria-selected="true"] .fic svg { transform: translateY(-2px) rotate(-4deg) scale(1.06); }
+@media (max-width: 560px) { .ftab .fic { width: 52px; height: 52px; margin-bottom: 4px; } }
+@media (prefers-reduced-motion: reduce) { .ftab .fic svg { transition: none; } .ftab:hover .fic svg, .ftab[aria-selected="true"] .fic svg { transform: none; } }
 </style>
 </head>
 <body>
@@ -2891,10 +2898,37 @@ footer.end { padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
     fig.innerHTML = '<img src="' + m.fig.src + '" width="' + m.fig.w + '" height="' + m.fig.h + '" alt="' + esc(m.fig.alt) + '"><figcaption>' + esc(m.fig.cap) + "</figcaption>";
     document.getElementById("heroStrip").innerHTML = m.strip.map(function (x) { return '<li><div class="big">' + esc(x[0]) + '</div><div class="cap">' + esc(x[1]) + pills(x[2]) + "</div></li>"; }).join("");
   }
+  /* ---------- 特色卡片的可愛插圖（內嵌 SVG，每個特色一張） ---------- */
+  function icFace(cx, cy, k) {
+    k = k || 1;
+    return '<circle cx="' + (cx - 6 * k) + '" cy="' + cy + '" r="' + 2.3 * k + '" fill="#2B2B33"/><circle cx="' + (cx + 6 * k) + '" cy="' + cy + '" r="' + 2.3 * k + '" fill="#2B2B33"/>' +
+      '<circle cx="' + (cx - 5.3 * k) + '" cy="' + (cy - 0.8 * k) + '" r="' + 0.8 * k + '" fill="#FFF"/><circle cx="' + (cx + 6.7 * k) + '" cy="' + (cy - 0.8 * k) + '" r="' + 0.8 * k + '" fill="#FFF"/>' +
+      '<path d="M' + (cx - 4 * k) + " " + (cy + 5 * k) + "q" + 4 * k + " " + 4.5 * k + " " + 8 * k + ' 0" fill="none" stroke="#2B2B33" stroke-width="1.9" stroke-linecap="round"/>' +
+      '<ellipse cx="' + (cx - 10 * k) + '" cy="' + (cy + 4 * k) + '" rx="3" ry="2" fill="#FF8FA3" opacity=".55"/><ellipse cx="' + (cx + 10 * k) + '" cy="' + (cy + 4 * k) + '" rx="3" ry="2" fill="#FF8FA3" opacity=".55"/>';
+  }
+  function icStar(x, y, r, c) { var a = r * 0.28; return '<path d="M' + x + " " + (y - r) + "L" + (x + a) + " " + (y - a) + "L" + (x + r) + " " + y + "L" + (x + a) + " " + (y + a) + "L" + x + " " + (y + r) + "L" + (x - a) + " " + (y + a) + "L" + (x - r) + " " + y + "L" + (x - a) + " " + (y - a) + 'z" fill="' + c + '"/>'; }
+  function icLens(x, y, r) { return '<circle cx="' + x + '" cy="' + y + '" r="' + r + '" fill="#34456B"/><circle cx="' + x + '" cy="' + y + '" r="' + r * 0.58 + '" fill="#7FB2FF"/><circle cx="' + (x - r * 0.25) + '" cy="' + (y - r * 0.3) + '" r="' + r * 0.2 + '" fill="#FFF"/>'; }
+  function icChip(body, pin) {
+    var pins = "", i;
+    for (i = 0; i < 3; i++) { var p = 26 + i * 10; pins += '<rect x="' + (p - 2) + '" y="10" width="4" height="8" rx="2" fill="' + pin + '"/><rect x="' + (p - 2) + '" y="54" width="4" height="8" rx="2" fill="' + pin + '"/><rect x="10" y="' + (p - 2) + '" width="8" height="4" rx="2" fill="' + pin + '"/><rect x="54" y="' + (p - 2) + '" width="8" height="4" rx="2" fill="' + pin + '"/>'; }
+    return pins + '<rect x="17" y="17" width="38" height="38" rx="9" fill="' + body + '"/>' + icFace(36, 33) + '<text x="36" y="50" text-anchor="middle" font-size="8" font-weight="700" fill="#FFFFFF" font-family="sans-serif">A20</text>';
+  }
+  function featIcon(id) {
+    var bg = { camera: "#E8F1FF", chip: "#FFF1D9", battery: "#E3F7E8", design: "#F1E8FF", "d-fold": "#FFE8EE", "d-camera": "#E4F4FF", "d-chip": "#EAE6FF", "d-battery": "#DDF5F1" }[id] || "#EEE", g = "";
+    if (id === "camera") g = '<rect x="19" y="9" width="34" height="54" rx="10" fill="#FFFFFF" stroke="#BCD3F5" stroke-width="2"/><rect x="23" y="13" width="26" height="25" rx="8" fill="#DCE8FA"/>' + icLens(31, 22, 4.8) + icLens(41, 22, 4.8) + icLens(36, 31, 4.8) + '<circle cx="45" cy="33" r="1.8" fill="#FFC83D"/>' + icFace(36, 48, 0.9) + icStar(60, 14, 6, "#FFC83D");
+    else if (id === "chip") g = icChip("#FF9F43", "#D98A3A") + '<path d="M60 8v10M55 13h10M56.5 9.5l7 7M63.5 9.5l-7 7" stroke="#6FB7FF" stroke-width="2" stroke-linecap="round"/>';
+    else if (id === "battery") g = '<rect x="12" y="22" width="42" height="30" rx="9" fill="#FFFFFF" stroke="#6BCB8B" stroke-width="3"/><rect x="55" y="31" width="6" height="12" rx="3" fill="#6BCB8B"/><rect x="16" y="26" width="34" height="22" rx="6" fill="#9BE8B2"/>' + icFace(33, 34, 0.95) + '<path d="M58 6l-7 14h5l-3 11 11-16h-6l4-9z" fill="#FFC83D" stroke="#E6A800" stroke-width="1" stroke-linejoin="round"/>';
+    else if (id === "design") g = [["#2B2B33", 10, 20], ["#D5D9E0", 22, 15], ["#8EC8F5", 34, 20], ["#B24A5A", 46, 15]].map(function (c) { return '<rect x="' + c[1] + '" y="' + c[2] + '" width="17" height="38" rx="5" fill="' + c[0] + '" stroke="#FFFFFF" stroke-width="2"/><circle cx="' + (c[1] + 5) + '" cy="' + (c[2] + 6) + '" r="2.4" fill="rgba(255,255,255,.55)"/>'; }).join("") + icStar(60, 12, 6, "#FFC83D") + icStar(11, 12, 4, "#FF8FA3");
+    else if (id === "d-fold") g = '<path d="M20 15q16-10 32 0" fill="none" stroke="#F4A3B5" stroke-width="2.4" stroke-linecap="round"/><path d="M50 9l4 6-7 1z" fill="#F4A3B5"/><rect x="8" y="22" width="27" height="38" rx="7" fill="#FFFFFF" stroke="#F4A3B5" stroke-width="2"/><rect x="37" y="22" width="27" height="38" rx="7" fill="#FFFFFF" stroke="#F4A3B5" stroke-width="2"/><rect x="12" y="26" width="19" height="30" rx="4" fill="#FFD3DE"/><rect x="41" y="26" width="19" height="30" rx="4" fill="#FFD3DE"/>' + icFace(36, 40, 1.05);
+    else if (id === "d-camera") g = '<rect x="15" y="10" width="42" height="52" rx="12" fill="#FFFFFF" stroke="#B8DDF5" stroke-width="2"/>' + icLens(28, 28, 8) + icLens(44, 28, 8) + '<path d="M29 46q7 7 14 0" fill="none" stroke="#2B2B33" stroke-width="2.2" stroke-linecap="round"/><ellipse cx="22" cy="45" rx="3.2" ry="2.2" fill="#FF8FA3" opacity=".55"/><ellipse cx="50" cy="45" rx="3.2" ry="2.2" fill="#FF8FA3" opacity=".55"/><path d="M62 11c-2.5-4-8 0-4 5l4 4 4-4c4-5-1.5-9-4-5z" fill="#FF7A93"/>';
+    else if (id === "d-chip") g = icChip("#8E7CFF", "#6F5FD6") + icStar(61, 12, 6, "#FFC83D") + icStar(10, 62, 4, "#FF8FA3");
+    else if (id === "d-battery") g = '<rect x="22" y="12" width="36" height="22" rx="8" fill="#FFFFFF" stroke="#8ED6CB" stroke-width="2.5"/><rect x="59" y="19" width="5" height="9" rx="2.5" fill="#8ED6CB"/><rect x="26" y="16" width="20" height="14" rx="4" fill="#B5EDE4"/><rect x="10" y="30" width="42" height="28" rx="9" fill="#FFFFFF" stroke="#3FB8A8" stroke-width="3"/><rect x="53" y="39" width="6" height="11" rx="3" fill="#3FB8A8"/><rect x="14" y="34" width="34" height="20" rx="6" fill="#7FE0D1"/>' + icFace(31, 42, 0.9) + '<path d="M62 44l-6 10h4l-2 8 9-12h-5l3-6z" fill="#FFC83D" stroke="#E6A800" stroke-width="1" stroke-linejoin="round"/>';
+    return '<svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" focusable="false"><rect width="72" height="72" rx="20" fill="' + bg + '"/>' + g + "</svg>";
+  }
   function renderTabs() {
     FT.innerHTML = M().features.map(function (f, i) {
       return '<button type="button" class="ftab" role="tab" id="ft-' + f.id + '" aria-selected="' + (i === featIdx) + '" data-i="' + i + '">' +
-        '<span class="t">' + esc(f.name) + '</span><span class="d">' + esc(f.desc) + '</span><span class="go">' + esc(t("go")) + "</span></button>";
+        '<span class="fic" aria-hidden="true">' + featIcon(f.id) + '</span><span class="t">' + esc(f.name) + '</span><span class="d">' + esc(f.desc) + '</span><span class="go">' + esc(t("go")) + "</span></button>";
     }).join("");
   }
   function renderPanel() {
