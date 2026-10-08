@@ -1,0 +1,11 @@
+# 機密：絕不可進 git
+.env
+.env.*
+!.env.example
+
+# 系統與相依套件
+.DS_Store
+node_modules/
+.vercel/
+.supabase/
+supabase/.temp/
